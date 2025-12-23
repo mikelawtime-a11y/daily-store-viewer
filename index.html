@@ -4,12 +4,17 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Store Viewer</title>
+
+  <!-- Prevent favicon.ico 404 -->
+  <link rel="icon" href="data:,">
+
   <style>
     body { font-family: system-ui, Arial; padding: 20px; }
     button { padding: 10px 14px; font-size: 16px; }
     pre { background: #111; color: #eee; padding: 12px; border-radius: 8px; overflow: auto; }
   </style>
 </head>
+
 <body>
   <h1>Store Viewer</h1>
 
@@ -19,16 +24,17 @@
   <script>
     const STORE_URL = "https://raw.githubusercontent.com/mikelawtime-a11y/daily-store/main/store.json";
 
+    const btn = document.getElementById("btn");
+    const out = document.getElementById("out");
+
     btn.addEventListener("click", async () => {
       out.textContent = "Loading...";
       try {
-        // Cache-buster helps if CDN caches the raw file
-        const url = `${STORE_URL}?t=${Date.now()}`;
-
+        const url = `${STORE_URL}?t=${Date.now()}`; // cache buster
         const res = await fetch(url, { cache: "no-store" });
         if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
 
-        const json = await res.json(); // parse JSON :contentReference[oaicite:3]{index=3}
+        const json = await res.json(); // parse JSON
         out.textContent = JSON.stringify(json, null, 2);
       } catch (err) {
         out.textContent = "Error: " + err.message;
